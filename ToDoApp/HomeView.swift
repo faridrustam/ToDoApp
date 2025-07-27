@@ -16,12 +16,9 @@ struct HomeView: View {
             VStack() {
                 List {
                     ForEach(viewModel.toDoList, id: \.self) { item in
-                        Text(item)
+                        Text(item.text)
                     }.onDelete { offsets in
-                        viewModel.toDoList.remove(atOffsets: offsets)
-                    }
-                    .onMove { (source, destination) in
-                        viewModel.toDoList.move(fromOffsets: source, toOffset: destination)
+                        viewModel.removeToDo(at: offsets)
                     }
                 }
             }.navigationTitle(Text("Your ToDos"))
@@ -32,12 +29,14 @@ struct HomeView: View {
                     })
                     ToolbarItem(placement: ToolbarItemPlacement.topBarTrailing, content: {
                         Button("Add") {
-                            viewModel.showScreen.toggle()
-                        }.sheet(isPresented: $viewModel.showScreen) {
+                            viewModel.screenShown.toggle()
+                        }.sheet(isPresented: $viewModel.screenShown) {
                             ContentAddView(viewModel: viewModel)
                         }
                     })
                 })
+        }.onAppear {
+            viewModel.loadFromCloud()
         }
     }
 }

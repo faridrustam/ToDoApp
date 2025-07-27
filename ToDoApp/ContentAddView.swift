@@ -24,7 +24,8 @@ struct ContentAddView: View {
                 
                 Button {
                     if viewModel.activateButton(textString) {
-                        viewModel.saveToDo(textString)
+                        CloudManager.shared.addToDoCloud(ToDoModel(text: textString))
+                        viewModel.loadFromCloud()
                         textString = ""
                     }
                 } label: {
